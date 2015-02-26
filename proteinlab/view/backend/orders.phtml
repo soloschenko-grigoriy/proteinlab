@@ -1,0 +1,96 @@
+<div class="row-fluid orders">
+  <h1>Заказы</h1>
+  <hr/>
+  <div class="span8">
+    <?php if(count($orders) > 0): ?>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Заказчик</th>
+            <th>Примечания</th>
+            <th>Товары</th>
+            <th>Итого</th>
+            <th>Время</th>     
+            <th>Статус</th>
+            <th></th>
+          </tr>
+        </thead>
+        <?php foreach ($orders as $order): ?>
+          <tr>
+            <td><?php echo $order->id; ?></td>
+            <td nowrap>
+              <?php echo $order->name; ?><br/>
+              <?php echo $order->email; ?><br/> 
+              <?php echo $order->phone; ?><br/>
+              <?php echo $order->address; ?><br/>
+            </td>
+            <td><?php echo $order->notes; ?></td>
+            <td nowrap>
+              <ol>
+                <?php foreach ($order->products as $product): ?>
+                  <li>
+                    <a href="/item/<?php echo $product['product']['slug']; ?>" target="_blank"><?php echo $product['product']['name']; ?></a>
+                    <?php echo $product['weight']['name']; ?> 
+                    <?php if($product['weight']['type'] == 'gramm'): ?>г.
+                    <?php elseif($product['weight']['type'] == 'tablet'): ?>таб.
+                    <?php elseif($product['weight']['type'] == 'capsule'): ?>капс.
+                    <?php elseif($product['weight']['type'] == 'softgels'): ?>гел. капс.
+                    <?php elseif($product['weight']['type'] == 'packets'): ?>пак.
+                    <?php elseif($product['weight']['type'] == 'bottles'): ?>бут.
+                    <?php endif; ?>
+                    <?php echo $product['quantity']; ?> шт. по цене <?php echo $product['price']; ?> 
+                  </li>
+                <?php endforeach; ?>
+              </ol>
+            </td>
+            <td nowrap><?php echo $order->total; ?> грн.</td>
+            <td nowrap><?php echo date('d M H:i', $order->time); ?></td>
+            <td nowrap>
+              <?php if($order->status == 'new'): ?>
+                <p class="text-error">новый</p>
+              <?php elseif($order->status == 'process'): ?>
+                <p class="text-warning">в процессе</p>
+              <?php else: ?>
+                <p class="muted">выполнен</p>
+              <?php endif; ?>
+            </td>
+            <td>
+              <?php if($order->status == 'new'): ?>
+                <input data-id="<?php echo $order->id; ?>" data-status="process" type="button" class="btn btn-warning" value="принять" />
+                <img src="/img/ajax-loader.gif" style="display:none" />
+              <?php elseif($order->status == 'process'): ?>
+                <input data-id="<?php echo $order->id; ?>" data-status="done" type="button" class="btn btn-success" value="выполнен" />
+              <?php else: ?>
+                <input data-id="<?php echo $order->id; ?>" data-status="deleted" type="button" class="btn btn-danger" value="удалить" />
+              <?php endif; ?>
+            </td>
+          </tr>
+        <?php endforeach; ?>
+      </table>
+    <?php else: ?>
+      <h4>заказов нет</h4>
+    <?php endif; ?>
+  </div>
+</div>
+
+<script type="text/javascript">
+  $(function(){
+    $('input[type=button]').on('click', function(){
+      $(this).hide();
+      $(this).next().show();
+
+      var self = $(this);
+      $.ajax({
+        url: '/admin/orders/'+$(this).data('id'),
+        type: 'post',
+        data: {
+          status : $(this).data('status')
+        },
+        success: function(){
+          window.location.reload();
+        }
+      })
+    });
+  });
+</script>

@@ -1,0 +1,67 @@
+<div class="row-fluid products">
+  <h1><?php if($type == 'post'): ?>Комментарии пользователей к постам<?php else: ?>Отзывы пользователей о товарах<?php endif;?>  </h1>
+  <hr/>
+  <p>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th><?php if($type == 'post'): ?>Пост<?php else: ?>Товар<?php endif;?></th>
+          <th>Юзер</th>
+          <th>Сообщение</th>
+          <th>Дата</th>
+          <th></th>
+        </tr>
+      </thead>
+      <?php foreach($comments as $comment): ?>
+      <tr>
+        <td><?php echo $comment->id; ?></td>
+        <td nowrap>
+          <?php if($type == 'post'): ?>
+            <a href="/blog/item/<?php echo $comment['item']->slug; ?>" target="_blank"><?php echo $comment['item']->title; ?></a>
+          <?php else: ?>
+            <a href="/item/<?php echo $comment['item']->slug; ?>" target="_blank"><?php echo $comment['item']->name; ?></a>
+          <?php endif;?>
+        </td>
+        <td nowrap>
+          ФИО: <?php echo $comment->name; ?> <br/>
+          EMAIL: <?php echo $comment->email; ?> <br/>
+        </td>
+        <td><?php echo $comment->body; ?></td>
+        <td nowrap><?php echo date('d M Y', $comment->time); ?></td>
+        <td nowrap>
+          <?php if($comment->approved == 'no'): ?>
+            <input type="button" class="btn btn-success btn-small" value="разрешить" data-id="<?php echo $comment->id; ?>" data-status="yes">
+          <?php else: ?>
+            <input type="button" class="btn btn-warning btn-small" value="запретить" data-id="<?php echo $comment->id; ?>" data-status="no">
+          <?php endif; ?>
+          <input type="button" class="btn btn-danger btn-small" value="удалить" data-id="<?php echo $comment->id; ?>" data-status="delete">
+        </td>
+      </tr>
+      <?php endforeach; ?>
+    </table>
+  </p>
+  <div class="total-overlay"></div>
+</div>
+
+<script type="text/javascript">
+  $(function(){
+    $('input[type=button]').on('click', function(){
+      $(this).hide();
+      $(this).next().show();
+      $('.total-overlay').show();
+      
+      var self = $(this);
+      $.ajax({
+        url: '/admin/comment/'+$(this).data('id'),
+        type: 'post',
+        data: {
+          status : $(this).data('status')
+        },
+        success: function(){
+          window.location.reload();
+        }
+      })
+    });
+  });
+</script>

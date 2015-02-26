@@ -1,0 +1,84 @@
+<div class="row-fluid products">
+  <h1><?php if($article): ?>Редактирование<?php else: ?>Добавление<?php endif; ?> статьи</h1>
+  <hr/>
+  <form class="form-horizontal" action="/admin/articles/one<?php if($article): ?>/<?php echo $article->id; ?><?php endif; ?>" method="post">
+    <div class="control-group">
+      <label class="control-label">Название</label>
+      <div class="controls">
+        <input type="text" class="span8" name="title" required value="<?php if($article): ?><?php echo $article->title; ?><?php endif; ?>">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Содержание</label>
+      <div class="controls">
+        <textarea class="span8 editor" rows="8" name="body"><?php if($article): ?><?php echo $article->body; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Краткое содержание</label>
+      <div class="controls">
+        <textarea class="span8 editor" rows="8" name="short"><?php if($article): ?><?php echo $article->short; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Очень краткое содержание</label>
+      <div class="controls">
+        <textarea class="span8 editor" rows="8" name="shortest"><?php if($article): ?><?php echo $article->shortest; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Meta Keywords</label>
+      <div class="controls">
+        <textarea class="span8" rows="8" name="keywords"><?php if($article): ?><?php echo $article->keywords; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Meta descripttion</label>
+      <div class="controls">
+        <textarea class="span8" rows="8" name="description"><?php if($article): ?><?php echo $article->description; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Теги</label>
+      <div class="controls">
+        <select class="span8" name="tags[]" multiple>
+          <?php foreach($tags as $tag): ?>
+            <option value="<?php echo $tag->id; ?>" <?php if($article && in_array($tag->id, $articleTags)): ?>selected<?php endif; ?>><?php echo $tag->name; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <input type="submit" class="btn btn-success btn-large" value="сохранить" />
+        <?php if($article): ?><input type="button" class="btn btn-danger btn-large delete" value="удалить" /><?php endif; ?>
+      </div>
+    </div>
+  </form>
+  <div class="total-overlay"></div>
+</div>
+
+<script type="text/javascript">
+  $(function(){
+    $('.editor').wysihtml5({
+      "stylesheets": false,
+      "html": true, //Button which allows you to edit the generated HTML. Default false
+      "image": true, //Button to insert an image. Default true,
+    });
+
+    <?php if($article): ?>
+      $('.delete').on('click', function(){
+        if(confirm('Вы уверены, что хотите удалить этот товар? Отменить это действие будет невозможно')){
+          $('.total-overlay').show();
+          $.ajax({
+            url       : '/admin/articles/one/'+<?php echo $article->id ?>,
+            type      : 'DELETE',
+            success   : function(){
+              window.location.href = '/admin/articles'
+            }
+          })
+        }
+      });
+    <?php endif; ?>
+  });
+</script>

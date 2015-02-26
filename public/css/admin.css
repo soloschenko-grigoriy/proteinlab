@@ -1,0 +1,89 @@
+body{
+  padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+}
+.form-signin {
+  max-width: 300px;
+  padding: 19px 29px 29px;
+  margin: 0 auto 20px;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+     -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+          box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin input[type="text"],
+.form-signin input[type="password"] {
+  font-size: 16px;
+  height: auto;
+  margin-bottom: 15px;
+  padding: 7px 9px;
+}
+.products td, .products th{
+  /*text-align: center;*/
+}
+.photo{
+  width:100px;
+  height:50px;
+  float:left;
+  background:#999;
+  padding: 25px 0;
+  text-align: center;
+  margin: 5px;
+  cursor: pointer;
+}
+.photo i{
+  color: #ccc;
+  font-size: 50px;
+  line-height: 50px;
+}
+.photo:hover i{
+  color: #fff;
+}
+.photo img{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100px;
+  height: 100px;
+}
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+}
+.fileinput-button input[type='file'] {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  -ms-filter: 'alpha(opacity=0)';
+  font-size: 200px;
+  height: 100px;
+  direction: ltr;
+  cursor: pointer;
+}
+.photos .progress{
+  width: 100px;
+  margin: 0 5px;
+  float: left;
+  visibility: hidden;
+}
+.total-overlay{
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top:0;
+  left: 0;
+  background: #ccc;
+  opacity: 0.7;
+  z-index: 10000;
+  text-align: center;
+  display: none;
+}

@@ -1,0 +1,127 @@
+<div id="catalogue">
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <ul class="breadcrumb">
+            <li><a href="/">Главная</a> <span class="divider">/</span></li>
+            <li class="active"><?php echo $current->name; ?></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="row-fluid">
+        <div class="span12">
+
+          <h2><?php echo $current->name; ?></h2>
+          <p><?php echo $current->description; ?></p>
+          <div class="span12" style="margin-left:0">
+            <div class="span6">
+              <?php if($type == 'category'): ?>
+                <select class="span12 filter" data-filter-type="manufacturer">
+                  <option value="0">Производитель:</option>
+                  <?php foreach($manufacturers as $manufacturer): ?>
+                    <option value="<?php echo $manufacturer->id; ?>"><?php echo $manufacturer->name; ?></option>
+                  <?php endforeach; ?>
+                <?php else: ?>
+                <select class="span12 filter" data-filter-type="category">
+                  <option value="0">Категория:</option>
+                  <?php foreach($categories as $category): ?>
+                    <option value="<?php echo $category->id; ?>"><?php echo $category->name; ?></option>
+                  <?php endforeach; ?>
+                <?php endif;?> -->
+              </select>
+            </div> 
+            <div class="span6" >
+              <select class="sort span12">
+                <option value="0">По алфавиту</option>
+                <option value="1">По цене (по возрастанию)</option>
+                <option value="2">По цене (по убыванию)</option>           
+              </select>
+            </div>
+          </div>         
+          <ul class="thumbnails">
+            <?php $count = 1; ?>
+            <?php foreach($products as $product): ?>
+              <li class="<?php if($count == 1): ?>last<?php endif;?> span3 mix manufacturer-<?php echo $product->manufacturer['id']; ?> category-<?php echo $product->category['id']; ?>" data-price="<?php echo $product->minPrice; ?>" data-name="<?php echo $product->name; ?>">
+                <div class="thumbnail">
+                  <a href="/item/<?php echo $product->slug; ?>"><img src="/uploads/products/<?php echo $product->img['src']; ?>" alt="<?php echo $product->img['name']; ?>" /></a>
+                  <div class="caption-details">
+                  <h3><?php echo $product->name; ?></h3>
+                    <?php if($type == 'category'): ?>
+                      <h6><?php echo $product->manufacturer['name']; ?></h6>
+                    <?php else: ?>
+                      <h6><?php echo $product->category['name']; ?></h6>
+                    <?php endif; ?>
+                  <a href="/item/<?php echo $product->slug; ?>" class="price">от <?php echo $product->minPrice; ?> грн.</a>
+                  </div>
+                </div>
+              </li>
+              <?php if($count == 4){ $count = 0; } ?>
+              <?php $count++; ?>
+            <?php endforeach; ?>
+          </ul>
+          
+          <!-- <div class="pagination pagination-centered">
+            <ul>
+            <li class="disabled"><a href="#">&laquo;</a></li>
+            <li class="active"><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li><a href="#">&raquo;</a></li>
+           </ul>
+          </div> -->
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script type="text/javascript">
+  function addFirstClass(items)
+  {
+    var count = 1;
+    items.each(function(){
+      if(count == 1){ $(this).addClass('last'); }
+      if(count == 4){ count = 0; }
+      count ++;
+    });
+  }
+
+  $(function(){
+    $('.filter').on('change', function(){
+      var type  = $(this).data('filter-type'),
+          id    = $(this).val(),
+          items = $(this).val() > 0 ? $('.thumbnails .'+type+"-"+id) : $('.thumbnails .mix');
+      
+      $('.thumbnails .mix').hide();
+      $('.thumbnails .mix').removeClass('last');
+
+      items.fadeIn(500);
+      addFirstClass(items);
+
+    });
+    
+    $('.sort').on('change', function(){
+
+      var items = [];
+      if($(this).val() == 1){
+        items = _.sortBy($('.thumbnails .mix'), function(one){ return $(one).data('price'); });      
+      }else if($(this).val() == 2){
+        items = _.sortBy($('.thumbnails .mix'), function(one){ return -$(one).data('price'); });      
+      }else{
+        items = _.sortBy($('.thumbnails .mix'), function(one){ return $(one).data('name'); });          
+      }
+      
+      _.each(items, function(item){ $(item).appendTo($('.thumbnails')); });
+      
+      $('.thumbnails .mix').removeClass('last');
+      addFirstClass($('.thumbnails .mix:visible'));
+
+    });
+
+  });
+
+
+</script>

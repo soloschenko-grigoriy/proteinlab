@@ -1,0 +1,276 @@
+<div class="row-fluid products">
+  <h1><?php if($product): ?>Редактирование<?php else: ?>Добавление<?php endif; ?> товара</h1>
+  <hr/>
+  <form class="form-horizontal" action="/admin/one<?php if($product): ?>/<?php echo $product->id; ?><?php endif; ?>" enctype="multipart/form-data" method="post">
+    <div class="control-group">
+      <label class="control-label">Название</label>
+      <div class="controls">
+        <input type="text" class="span8" name="name" required value="<?php if($product): ?><?php echo $product->name; ?><?php endif; ?>">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Описание</label>
+      <div class="controls">
+        <textarea class="span8 editor" rows="8" name="desc"><?php if($product): ?><?php echo $product->description; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Дополнительная информация</label>
+      <div class="controls">
+        <textarea class="span8 editor" rows="8" name="info"><?php if($product): ?><?php echo $product->info; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Meta Keywords</label>
+      <div class="controls">
+        <textarea class="span8" rows="8" name="keywords"><?php if($product): ?><?php echo $product->keywords; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Meta descripttion</label>
+      <div class="controls">
+        <textarea class="span8" rows="8" name="meta_description"><?php if($product): ?><?php echo $product->meta_description; ?><?php endif; ?></textarea>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Категория</label>
+      <div class="controls">
+        <select class="span8" name="category" required>
+          <?php foreach($categories as $category): ?>
+            <option value="<?php echo $category->id; ?>" <?php if($product && $category->id == $product->category_id): ?>selected<?php endif; ?>><?php echo $category->name; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Производитель</label>
+      <div class="controls">
+        <select class="span8" name="manufacturer" required>
+          <?php foreach($manufacturers as $manufacturer): ?>
+            <option value="<?php echo $manufacturer->id; ?>" <?php if($product && $manufacturer->id == $product->manufacturer_id): ?>selected<?php endif; ?>><?php echo $manufacturer->name; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Похожие товари</label>
+      <div class="controls">
+        <select class="span8" name="related[]" multiple>
+          <?php foreach($products as $one): ?>
+            <option value="<?php echo $one->id; ?>" <?php if($product && in_array($one->id, $related)): ?>selected<?php endif; ?>><?php echo $one->name; ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label">Веса и цены</label>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[0][name]" placeholder="вес" required value="<?php if($product && isset($product->weights[0])): ?><?php echo $product->weights[0]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[0][type]" required>
+          <option value="gramm"     <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet"    <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule"   <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels"  <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets"   <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles"   <?php if($product && isset($product->weights[0]) && $product->weights[0]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[0][price]" placeholder="цена" required value="<?php if($product && isset($product->weights[0])): ?><?php echo $product->weights[0]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[1][name]" placeholder="вес" value="<?php if($product && isset($product->weights[1])): ?><?php echo $product->weights[1]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[1][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[1]) && $product->weights[1]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[1][price]" placeholder="цена" value="<?php if($product && isset($product->weights[1])): ?><?php echo $product->weights[1]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[2][name]" placeholder="вес" value="<?php if($product && isset($product->weights[2])): ?><?php echo $product->weights[2]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[2][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[2]) && $product->weights[2]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[2][price]" placeholder="цена" value="<?php if($product && isset($product->weights[2])): ?><?php echo $product->weights[2]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[3][name]" placeholder="вес" value="<?php if($product && isset($product->weights[3])): ?><?php echo $product->weights[3]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[3][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[3]) && $product->weights[3]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[3][price]" placeholder="цена" value="<?php if($product && isset($product->weights[3])): ?><?php echo $product->weights[3]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[4][name]" placeholder="вес" value="<?php if($product && isset($product->weights[4])): ?><?php echo $product->weights[4]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[4][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[4]) && $product->weights[4]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[4][price]" placeholder="цена" value="<?php if($product && isset($product->weights[4])): ?><?php echo $product->weights[4]['price']; ?><?php endif; ?>"> грн.
+      </div>
+
+
+
+      <div class="controls">
+        <input type="number" class="span2" name="weights[5][name]" placeholder="вес" value="<?php if($product && isset($product->weights[5])): ?><?php echo $product->weights[5]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[5][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[5]) && $product->weights[5]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[5][price]" placeholder="цена" value="<?php if($product && isset($product->weights[5])): ?><?php echo $product->weights[5]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[6][name]" placeholder="вес" value="<?php if($product && isset($product->weights[6])): ?><?php echo $product->weights[6]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[6][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[6]) && $product->weights[6]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[6][price]" placeholder="цена" value="<?php if($product && isset($product->weights[6])): ?><?php echo $product->weights[6]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[7][name]" placeholder="вес" value="<?php if($product && isset($product->weights[7])): ?><?php echo $product->weights[7]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[7][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[7]) && $product->weights[7]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[7][price]" placeholder="цена" value="<?php if($product && isset($product->weights[7])): ?><?php echo $product->weights[7]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[8][name]" placeholder="вес" value="<?php if($product && isset($product->weights[8])): ?><?php echo $product->weights[8]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[8][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[8]) && $product->weights[8]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[8][price]" placeholder="цена" value="<?php if($product && isset($product->weights[8])): ?><?php echo $product->weights[8]['price']; ?><?php endif; ?>"> грн.
+      </div>
+      <div class="controls">
+        <input type="number" class="span2" name="weights[9][name]" placeholder="вес" value="<?php if($product && isset($product->weights[9])): ?><?php echo $product->weights[9]['name']; ?><?php endif; ?>"> 
+        <select class="span1" name="weights[9][type]">
+          <option value="gramm" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'gramm'): ?>selected<?php endif; ?>>г.</option>
+          <option value="tablet" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'tablet'): ?>selected<?php endif; ?>>таб.</option>
+          <option value="capsule" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'capsule'): ?>selected<?php endif; ?>>капс.</option>
+          <option value="softgels" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'softgels'): ?>selected<?php endif; ?>>гел. капс.</option>
+          <option value="packets" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'packets'): ?>selected<?php endif; ?>>пак.</option>
+          <option value="bottles" <?php if($product && isset($product->weights[9]) && $product->weights[9]['type'] == 'bottles'): ?>selected<?php endif; ?>>бут.</option>
+        </select> &nbsp;&nbsp;
+        <input type="number" class="span2" name="weights[9][price]" placeholder="цена" value="<?php if($product && isset($product->weights[9])): ?><?php echo $product->weights[9]['price']; ?><?php endif; ?>"> грн.
+      </div>
+    </div>
+    <div class="control-group photos">
+      <label class="control-label">Фотографии</label>
+      <div class="controls">
+        <div class="photo fileinput-button">
+          <i class="icon-camera"></i>
+          <?php if($product && isset($product->photos[0])): ?><img src="/uploads/products/<?php echo $product->photos[0]['src']; ?>"/><?php endif; ?>
+          <input type="file" class='fileupload' name="photo" data-num="0">
+        </div>
+        <div class="photo fileinput-button">
+          <i class="icon-camera"></i>
+          <?php if($product && isset($product->photos[1])): ?><img src="/uploads/products/<?php echo $product->photos[1]['src']; ?>"/><?php endif; ?>
+          <input type="file" class='fileupload' name="photo" data-num="1">
+        </div>
+        <div class="photo fileinput-button">
+          <i class="icon-camera"></i>
+          <?php if($product && isset($product->photos[2])): ?><img src="/uploads/products/<?php echo $product->photos[2]['src']; ?>"/><?php endif; ?>
+          <input type="file" class='fileupload' name="photo" data-num="2">
+        </div>
+        <br style="clear:both" />
+        <div class="progress progress-striped progress-warning" id="progressPhoto0"><div class="bar" style="width: 20%;"></div></div>
+        <div class="progress progress-striped progress-warning" id="progressPhoto1"><div class="bar" style="width: 20%;"></div></div>
+        <div class="progress progress-striped progress-warning" id="progressPhoto2"><div class="bar" style="width: 20%;"></div></div>
+
+        <input type="hidden" name="photos[0]" value="<?php if($product && isset($product->photos[0])): ?><?php echo $product->photos[0]['src']; ?><?php endif; ?>" id="photos0" />
+        <input type="hidden" name="photos[1]" value="<?php if($product && isset($product->photos[1])): ?><?php echo $product->photos[1]['src']; ?><?php endif; ?>" id="photos1" />
+        <input type="hidden" name="photos[2]" value="<?php if($product && isset($product->photos[2])): ?><?php echo $product->photos[2]['src']; ?><?php endif; ?>" id="photos2" />
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="controls">
+        <input type="submit" class="btn btn-success btn-large" value="сохранить" />
+        <?php if($product): ?><input type="button" class="btn btn-danger btn-large delete" value="удалить" /><?php endif; ?>
+      </div>
+    </div>
+  </form>
+  <div class="total-overlay"></div>
+</div>
+
+<script type="text/javascript">
+  $(function(){
+    $('.editor').wysihtml5({
+      "stylesheets": false,
+      "html": true, //Button which allows you to edit the generated HTML. Default false
+      "image": false, //Button to insert an image. Default true,
+    });
+
+    $('.fileupload').fileupload({
+      url       : '/admin/upload',
+      dataType  : 'json',
+      progress       : function(e, data){
+        var progress = parseInt(data.loaded / data.total * 100, 10),
+            elm      = $('#progressPhoto'+$(e.target).data('num'));
+
+        elm
+          .css({ visibility: 'visible'})
+          .find('.bar').width(progress+'%');
+      },
+      done      : function(e, data){
+        var target = $(e.target),
+            num    = target.data('num'),
+            name   = data.result.name;
+
+        $('#progressPhoto'+num).css({ visibility: 'hidden'});
+
+        target.parent().append('<img src="/uploads/products/'+name+'"/>');
+        
+        $('#photos'+num).val(name);
+      }
+    });
+
+    <?php if($product): ?>
+      $('.delete').on('click', function(){
+        if(confirm('Вы уверены, что хотите удалить этот товар? Отменить это действие будет невозможно')){
+          $('.total-overlay').show();
+          $.ajax({
+            url       : '/admin/one/'+<?php echo $product->id ?>,
+            type      : 'DELETE',
+            success   : function(){
+              window.location.href = '/admin/products'
+            }
+          })
+        }
+      });
+    <?php endif; ?>
+  });
+</script>

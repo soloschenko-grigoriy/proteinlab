@@ -1,0 +1,51 @@
+<div class="row-fluid products">
+  <h1>Товары</h1>
+  <hr/>
+  <p><div class='pull-right'><a class="btn btn-success btn-large" href="/admin/one">Добавить товар</a></div></p>
+  <br class="clearfix" /><br/><br/>
+  <p>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Название</th>
+          <th>Производитель</th>
+          <th>Категория</th>
+          <th>Веса и цены</th>
+          <th>Фото</th>
+          <th></th>
+        </tr>
+      </thead>
+      <?php $count = 1; ?>
+      <?php foreach($products as $key => $product): ?>
+      <tr>
+        <td><?php echo $count++; ?></td>
+        <td><a href="/item/<?php echo $product->slug; ?>" target="_blank"><?php echo $product->name; ?></a></td>
+        <td><?php echo $product->manufacturer['name']; ?></td>
+        <td><?php echo $product->category['name']; ?></td>
+        <td nowrap>
+          <?php foreach($product->weights as $weight): ?>
+            <div>
+              <?php echo $weight['name']; ?> 
+              <?php if($weight['type'] == 'gramm'): ?>г.
+              <?php elseif($weight['type'] == 'tablet'): ?>таб.
+              <?php elseif($weight['type'] == 'capsule'): ?>капс.
+              <?php elseif($weight['type'] == 'softgels'): ?>гел. капс.
+              <?php elseif($weight['type'] == 'packets'): ?>пак.
+              <?php elseif($weight['type'] == 'bottles'): ?>бут.
+              <?php endif; ?> 
+              <?php echo $weight['price']; ?> грн.</div>
+          <?php endforeach; ?>
+        </td>
+        <td>
+          <?php foreach($product->photos as $key => $photo): ?>
+            <a href="/uploads/products/<?php echo $photo['src']; ?>" target="_blank"><img src="/uploads/products/<?php echo $photo['src']; ?>" width="30px"></a> &nbsp;
+          <?php endforeach; ?>
+        </td>
+        <td><a class="btn btn-warning btn-small" href="/admin/one/<?php echo $product->id; ?>">ред.</a></td>
+      </tr>
+      <?php endforeach; ?>
+    </table>
+  </p>
+  <div class='pull-right'><a class="btn btn-success btn-large" href="/admin/one">Добавить товар</a></div>
+</div>

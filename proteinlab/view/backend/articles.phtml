@@ -1,0 +1,25 @@
+<div class="row-fluid products">
+  <h1>Статьи</h1>
+  <hr/>
+  <p><div class='pull-right'><a class="btn btn-success btn-large" href="/admin/articles/one">Добавить статью</a></div></p>
+  <br class="clearfix" /><br/><br/>
+  <p>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Название</th>
+          <th></th>
+        </tr>
+      </thead>
+      <?php foreach($posts as $post): ?>
+      <tr>
+        <td><?php echo $post->id; ?></td>
+        <td><a href="/blog/item/<?php echo $post->slug; ?>" target="_blank"><?php echo $post->title; ?></a></td>
+        <td><a class="btn btn-warning btn-small" href="/admin/articles/one/<?php echo $post->id; ?>">ред.</a></td>
+      </tr>
+      <?php endforeach; ?>
+    </table>
+  </p>
+  <div class='pull-right'><a class="btn btn-success btn-large" href="/admin/articles/one">Добавить статью</a></div>
+</div>

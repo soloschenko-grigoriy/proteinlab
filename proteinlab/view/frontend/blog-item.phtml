@@ -1,0 +1,168 @@
+<div class="page-content">
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <ul class="breadcrumb">
+            <li><a href="/">Главная</a> <span class="divider">/</span></li>
+            <li><a href="/blog">Блог о спорте</a> <span class="divider">/</span></li>
+            <li class="active"><?php echo $post->title; ?></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="row-fluid blog">
+        <div class="span9">
+          <div class="row-fluid blog-post">
+            <div class="span12">
+              <h2>
+                <span class="the-calendar">
+                  <span class="the-date"><i class="icon-calendar"></i> <?php echo date('d/m/y', $post->time); ?></span>
+                  <span class="the-comments"><i class="icon-comments"></i> <?php echo count($post->comments); ?></span>
+                </span>
+                <a href="/blog/item/<?php echo $post->slug; ?>"><?php echo $post->title; ?></a>
+              </h2>
+              <hr>
+              <p><?php echo html_entity_decode($post->body); ?></p>
+              <p class="meta-tags">
+                <i class="icon-tags"></i> 
+                <?php $last = end($post->tags); ?>
+                <?php foreach ($post->tags as $tag): ?>
+                  <a href="/blog/tags/<?php echo $tag->slug ?>"><?php echo $tag->name; ?></a><?php if($tag != $last): ?>,<?php endif; ?> 
+                <?php endforeach; ?>
+              </p>
+            </div>
+          </div>
+          
+          <div class="row-fluid">
+            <div class="span12 comment">
+              <h3><span class="visible-desktop visible-tablet">Комментарии (<?php echo count($post->comments); ?>)</span><span class="visible-phone">Комментарии (<?php echo count($post->comments); ?>)</span></h3>
+              <?php if(empty($post->comments)): ?>
+                <div style="margin-top:-20px">Вы можете быть первым, кто оставит комментарий!</div>
+                <?php else: ?>
+                <ul class="comments">
+                  <?php foreach ($post->comments as $comment): ?>
+                  <li class="clearfix">
+                    <!-- <img src="img/avatar.jpg" class="avatar" alt="avatar dodolan manuk" /> -->
+                    <div class="post-comments">
+                      <p><?php echo $comment->body; ?>
+                            <p class="meta"><?php echo $comment->name; ?>, <?php echo date('d/m/Y', $comment->time); ?></p>
+                    </div>
+                  </li>
+                  <?php endforeach; ?>
+                </ul>
+              <?php endif; ?>
+            </div>
+          </div>
+          
+          <div class="row-fluid">
+            <div class="span12 coment">
+              <h3>Оставьте комментарий</h3>
+              <form method="post" action="">
+                <input type="text"  id="name" class="span6" placeholder="Имя">
+                <input type="email" id="email" class="span6" placeholder="Email">
+                <!-- <input type="text" name="url" class="span4" placeholder="URL" required> -->
+                <textarea class="span12 clearfix" rows="8" id="body" placeholder="Текст комментария"></textarea>
+                <input data-pid="<?php echo $post->id; ?>" class="btn btn-warning" type="button" value="Отправить">
+                &nbsp;<img src="/img/ajax-loader.gif" style="display:none"/>
+                <span class="successHandler">Ваш комментарий успешно отправлен на модерацию</span>
+                <span class="errorHandler">Произошла ошибка. Попробуйте позже</span>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="span3">
+          <div class="row-fluid blog-sidebar">
+            <div class="span12">
+              <div class="widget">
+                <h3><?php echo $widget['top']->title; ?></h3>
+                <p><?php echo $widget['top']->body; ?></p>
+              </div>
+              <div class="widget">
+                <h3><?php echo $widget['middle']->title; ?></h3>
+                <p><?php echo $widget['middle']->body; ?></p>
+              </div>
+              <div class="widget widget-tags">
+                <h3>Tags</h3>
+                <ul>
+                  <?php foreach ($tags as $tag): ?>                 
+                    <li><a href="/blog/tags/<?php echo $tag->slug ?>"><?php echo $tag->name; ?></a></li>
+                  <?php endforeach; ?>
+                </ul>
+              </div>
+              <div class="widget">
+                <h3><?php echo $widget['bottom']->title; ?></h3>
+                <p><?php echo $widget['bottom']->body; ?></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    $(function(){
+      $('input, textarea').on('focus', function(){
+        $(this).removeClass('error');
+      });
+      $('input[type=button]').on('click', function(){
+        var self          = this,
+            nameElm       = $('#name'),
+            emailElm      = $('#email'),
+            bodyElm       = $('#body'),
+            name          = $.trim(nameElm.val()),
+            email         = $.trim(emailElm.val()),
+            body          = $.trim(bodyElm.val()),
+            validateEmail = function(email){
+              var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              return re.test(email);
+            };
+        
+        if(!name){
+          nameElm.addClass('error');
+          nameElm.focus();
+          return;
+        }
+
+        if(!email || !validateEmail(email)){
+          emailElm.addClass('error');
+          emailElm.focus();
+          return;
+        }
+
+        if(!body){
+          bodyElm.addClass('error');
+          bodyElm.focus();
+          return;
+        }
+
+        $(this).prop('disabled', true);
+        $(this).next().show();
+        
+        $.ajax({
+          url: '/blog/comment',
+          type: 'post',
+          data: {
+            name: name,
+            email: email,
+            body: body,
+            pid: $(this).data('pid')
+          },
+          success: function(){
+            $('.successHandler').show();
+            $(self).next().hide();
+            nameElm.val('');
+            emailElm.val('');
+            bodyElm.val('');
+
+            _.delay(function(){ $('.successHandler').hide(); $(self).prop('disabled', false); }, 3000)
+          },
+          error: function(){
+            $('.errorHandler').show();
+            $(self).next().hide();
+            _.delay(function(){ $('.errorHandler').hide(); $(self).prop('disabled', false); }, 3000)
+          }
+        })
+      });
+    });
+  </script>

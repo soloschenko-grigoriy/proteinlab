@@ -1,0 +1,63 @@
+<?php include_once __DIR__.'/inc/header.phtml'; ?>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <!-- <li class="dropdown">
+                <a href="javacript:;" class="dropdown-toggle" data-toggle="dropdown">Статика <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/main">Главная</a></li>
+                  <li><a href="/admin/about">О нас</a></li>
+                  <li><a href="/admin/contacts">Контакты</a></li>
+                </ul>
+              </li> -->
+              <!-- <li class="dropdown">
+                <a href="javacript:;" class="dropdown-toggle" data-toggle="dropdown">Магазин <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/products">Товары</a></li>
+                  <li><a href="/admin/categories">Категории</a></li>
+                  <li><a href="/admin/manufactures">Производители</a></li>
+                  <li><a href="/admin/top">Популярные</a></li>
+                </ul>
+              </li> -->
+              <!-- <li class="dropdown">
+                <a href="javacript:;" class="dropdown-toggle" data-toggle="dropdown">Виджеты <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Растяжка на главной</a></li>
+                  <li><a href="#">Принципы на главной</a></li>
+                  <li><a href="#">Рекомендации на главной</a></li>
+                  <li><a href="#">Верхний в блоге</a></li>
+                  <li><a href="#">Нижний в блоге</a></li>
+                  <li><a href="#">Футер</a></li>
+                </ul>
+              </li> -->
+              <!-- <li class="dropdown">
+                <a href="javacript:;" class="dropdown-toggle" data-toggle="dropdown">Блоги <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/admin/articles">Статьи</a></li>
+                  <li><a href="/admin/tags">Теги</a></li>
+                </ul>
+              </li> -->
+              <li><a href="/admin/products">Товары</a></li>
+              <li><a href="/admin/articles">Статьи</a></li>
+              <li><a href="/admin/orders">Заказы (<?php echo $newCount; ?>)</a></li>
+              <li><a href="/admin/feedback">Сообщения</a></li>
+              <li><a href="/admin/postComments">Комментарии</a></li>
+              <li><a href="/admin/itemComments">Отзывы</a></li>
+            </ul>
+            <span class="pull-right"><button type="button" class="btn" onclick="window.location.href = '/admin/logout'">Выйти</button></span>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <?php include_once($page.'.phtml'); ?>
+    </div> <!-- /container -->
+<?php include_once __DIR__.'/inc/footer.phtml'; ?>

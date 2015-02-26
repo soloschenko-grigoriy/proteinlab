@@ -1,0 +1,158 @@
+<div class="page-content">
+    <div class="container">
+      <div class="row-fluid">
+        <div class="span12">
+          <ul class="breadcrumb">
+            <li><a href="/">Главная</a> <span class="divider">/</span></li>
+            <li class="active">Оформление заказа</li>
+          </ul>
+        </div>
+      </div>
+      
+      <?php if(count($order) > 0): ?>
+      <div class="row-fluid confirm">
+        <form class="form-horizontal" action="/order/confirm" method="post">
+        <h3 class="t-center">Оформление заказа</h3>
+        <hr>
+        <div class="control-group <?php if(isset($error['name'])): ?>has-error<?php endif;?>">
+          <label class="control-label">ФИО</label>
+          <div class="controls">
+            <input type="text" class="span8" name="name" id="name" value="<?php echo $values['name']; ?>">
+          </div>
+        </div>
+        <div class="control-group <?php if(isset($error['email'])): ?>has-error<?php endif;?>">
+          <label class="control-label">Email</label>
+          <div class="controls">
+            <input type="text" class="span8" name="email" id="email" value="<?php echo $values['email']; ?>">
+          </div>
+        </div>
+        <div class="control-group <?php if(isset($error['phone'])): ?>has-error<?php endif;?>">
+          <label class="control-label">Контактный телефон</label>
+          <div class="controls">
+            <input type="text" class="span8" name="phone" id="phone" value="<?php echo $values['phone']; ?>">
+          </div>
+        </div>
+        <div class="control-group <?php if(isset($error['address'])): ?>has-error<?php endif;?>">
+          <label class="control-label">Адрес доставки</label>
+          <div class="controls">
+            <textarea class="span8" rows="8" name="address" id="address"><?php echo $values['address']; ?></textarea>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Примечания</label>
+          <div class="controls">
+            <textarea class="span8" rows="8" name="notes" id="notes"><?php echo $values['notes']; ?></textarea>
+          </div>
+        </div>
+        <div class="order-products">
+          <table class="table table-condensed">
+            <tr class="heading">
+              <td style="text-align:left">Название</td>
+              <td >Вес</td>
+              <td >Количество</td>
+              <td>Стоимость</td>
+              <td></td>
+            </tr>
+            <?php foreach($order as $key=>$item): ?>
+              <tr class="orderItem" data-weight="<?php echo $item['weight']['id']; ?>" data-product="<?php echo $item['product']['id']; ?>" data-price="<?php echo $item['weight']['price']; ?>">
+                <td style="text-align:left"><?php echo $item['product']['name']; ?> (<?php echo $item['product']['manufacturer']['name']; ?>)</td>
+                <td >
+                  <?php echo $item['weight']['name']; ?> 
+                  <?php if($item['weight']['type'] == 'gramm'): ?> г.
+                  <?php elseif($item['weight']['type'] == 'tablet'): ?>таб.
+                  <?php elseif($item['weight']['type'] == 'capsule'): ?>капс.
+                  <?php elseif($item['weight']['type'] == 'softgels'): ?>гел. капс.
+                  <?php elseif($item['weight']['type'] == 'packets'): ?>пак.
+                  <?php elseif($item['weight']['type'] == 'bottles'): ?>бут.
+                  <?php endif; ?>
+                </td >
+                <td style="padding-top:5px;">
+                  <input type="button" value="-" class="btn btn-warning btn-xs decreaseOrder" style="margin-top:-10px">
+                  <input type="text" data-count="<?php echo $item['count']; ?>" class="countOrderInput" value="<?php echo $item['count']; ?>" disabled="disabled"/>
+                  <input type="button" value="+" class="btn btn-warning btn-xs increaseOrder" style="margin-top:-10px">
+                </td>
+                <td><span class="priceOrder"><?php echo $item['price']; ?></span> грн.</td>
+                <td><input type="button" value="удалить" class="btn btn-danger btn-xs removeOrder" ></td>
+              </tr>
+            <?php endforeach; ?>            
+          </table>
+          <div class="total">Всего к оплате: <span class="totalOrder"><?php echo $total ?> грн.</span></div>
+        </div>
+        <div class="form-actions">
+          <input id="send" type="button" value="Оформить заказ" class="btn btn-warning">
+          <input type="button" value="Очистить корзину" class="btn btn-danger clearOrder">
+         </div>
+      </form>
+      </div>
+      <div class="emprtyOrder" style="display:none">
+        <h3>Корзина пуста. </h3>
+        <h4>Сначала выберите какой-нибудь товар в <a href="/category">каталоге</a></h4>
+      </div>
+      <?php elseif($success == true): ?>
+        <h3>Спасибо за Ваш заказ! </h3>
+        <h4>Ближайшее время наш менеджер свяжется с Вами для уточнения деталей. <br/><br/><br/>А пока можете почитать наш <a href="/blog">блог</a></h4>
+      <?php else: ?>
+        <h3>Корзина пуста. </h3>
+        <h4>Сначала выберите какой-нибудь товар в <a href="/category">каталоге</a></h4>
+        <h4>Или почитайте наш <a href="/blog">блог</a></h4>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+      <?php endif; ?>
+    </div>
+  </div>
+
+    <script type="text/javascript">
+    $(function(){
+      $('#phone').mask('(000) 000 00 00');
+
+      $('input, textarea').on('focus', function(){
+        $(this).removeClass('error');
+        $(this).parent().parent().removeClass('has-error');
+      });
+      $('#send').on('click', function(){
+        var self          = this,
+            nameElm       = $('#name'),
+            emailElm      = $('#email'),
+            phoneElm      = $('#phone'),
+            addressElm    = $('#address'),
+            name          = $.trim(nameElm.val()),
+            email         = $.trim(emailElm.val()),
+            phone         = $.trim(phoneElm.val()),
+            address       = $.trim(addressElm.val()),
+            validateEmail = function(email){
+              var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              return re.test(email);
+            };
+        
+        if(!name){
+          nameElm.addClass('error');
+          nameElm.focus();
+          return;
+        }
+
+        // if(!email || !validateEmail(email)){
+        //   emailElm.addClass('error');
+        //   emailElm.focus();
+        //   return;
+        // }
+
+        if(!phone || phone.length < 15){
+          phoneElm.addClass('error');
+          phoneElm.focus();
+          return;
+        }
+
+        if(!address){
+          addressElm.addClass('error');
+          addressElm.focus();
+          return;
+        }
+
+        $('form').submit();
+      });
+    });
+  </script>

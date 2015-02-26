@@ -1,0 +1,348 @@
+<div class="page-content" itemscope itemtype="http://schema.org/Product">
+    <div class="container" >
+      <div class="row-fluid">
+        <div class="span6 pull-left">
+          <ul class="breadcrumb">
+            <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/" itemprop="url"><span itemprop="title">Главная</span></a> <span class="divider">/</span></li>
+            <li itemscope itemtype="http://data-vocabulary.org/Breadcrumb"><a href="/category/<?php echo $currentCategory->slug; ?>" itemprop="url"><span itemprop="title"><?php echo $currentCategory->name; ?></span></a> <span class="divider">/</span></li>
+            <li class="active"><?php echo $product->name; ?></li>
+          </ul>
+        </div>
+        <!-- <div class="span6 pull-right goodPhones">
+          (050) 123 - 13 - 14 &nbsp (050) 123 - 13 - 14 &nbsp (050) 123 - 13 - 14
+        </div> -->
+      </div>          
+
+      <div class="row-fluid">
+        <div class="span9 single-item">
+          <div class="row-fluid">
+            <div class="span5">
+              <div id="itemsingle" class="carousel slide clearfix">
+                <div class="carousel-inner">
+                  <?php foreach($product->photos as $key => $photo): ?>
+                  <div class="item <?php if($photo['id'] == $product->img['id']): ?>active<?php endif; ?>"><img itemprop="image" src="/uploads/products/<?php echo $photo['src']; ?>" alt="<?php echo $photo['name']; ?>"></div>
+                  <?php endforeach; ?>
+                </div>
+                
+                <ol class="carousel-indicators">
+                  <?php foreach($product->photos as $key => $photo): ?>
+                    <li data-target="#itemsingle" data-slide-to="<?php echo $key; ?>" <?php if($photo['id'] == $product->img['id']): ?>class="active"<?php endif; ?>><img src="/uploads/products/<?php echo $photo['src']; ?>" alt="<?php echo $photo['name']; ?>"></li>
+                  <?php endforeach; ?>
+                </ol>
+              
+              </div>
+            </div>
+            <div class="span7">
+              <h3 style="color:#1e1e1e" itemprop="name"><?php echo $product->name; ?></h3>
+              <h6 itemprop="brand"><?php echo $product->manufacturer->name; ?></h6>
+              <p  itemprop="description"><?php echo html_entity_decode($product->description); ?></p>
+              <p>Выберите вес: 
+                <?php foreach($product->weights as $weight): ?>
+                  <?php 
+                    if($weight['type'] == 'gramm'){
+                      $type = 'г.';
+                    }elseif($weight['type'] == 'tablet'){
+                      $type = 'таб.';
+                    }elseif($weight['type'] == 'capsule'){
+                      $type = 'капс.';
+                    }elseif($weight['type'] == 'softgels'){
+                      $type = 'гел. капс.';
+                    }elseif($weight['type'] == 'packets'){
+                      $type = 'пак.';
+                    }elseif($weight['type'] == 'bottles'){
+                      $type = 'бут.';
+                    }
+                  ?>
+                  <span data-id="<?php echo $weight['id']; ?>" data-price="<?php echo $weight['price']; ?>" class="label label-warning weight <?php if($weight['id'] == $product->firstWeight['id']): ?>active<?php endif;?>">
+                    <?php echo $weight['name'], ' ', $type; ?> 
+
+                    <span style="display:none" itemprop="offers" itemscope itemtype="http://schema.org/Offer">
+                      <span itemprop="name"><?php echo $product->name, ' ', $weight['name'], ' ', $type; ?> </span>
+                      <span itemprop="price"><?php echo $weight['price']; ?></span>
+                      <span itemprop="priceCurrency" content="UAH"></span>
+                      <span itemprop="category" content="<?php echo $currentCategory->name; ?>"></span>
+                      <span itemprop="eligibleQuantity" content="<?php echo $weight['name'], ' ', $type; ?> "></span>
+                    </span>
+                  </span>
+                <?php endforeach; ?>
+
+              </p>
+              <h4 class="price" style="color:#666"><?php echo $product->firstWeight['price']; ?> грн.</h4>              
+              <p>
+                <a href="javascript:;" data-product="<?php echo $product->id; ?>" class="btn btn-warning btn-large addOrder"><i class="icon-shopping-cart"></i> В корзину</a>
+                <a href="javascript:;" data-product="<?php echo $product->id; ?>" class="btn btn-warning btn-large quickOrder"><i class="icon-ok-sign"></i> Купить в один клик</a>
+                <div class="row-fluid coment quickOrderForm" style="display:none">
+                  <br/>
+                  <!-- <h3>Купить в один клик</h3> -->
+                  <form method="post" action="">
+                    <!-- <input type="text"  id="nameQuick" class="span12" placeholder="Имя"> -->
+                    <input type="text" id="phoneQuick" class="span12" placeholder="Телефон">
+                    <!-- <textarea class="span12 clearfix" rows="3" id="addressQuick" placeholder="Адрес доставки"></textarea>
+                    <textarea class="span12 clearfix" rows="3" id="notesQuick" placeholder="Примечание"></textarea> -->
+                    <input data-pid="<?php echo $product->id; ?>" class="btn btn-warning quickOrderSend" type="button" value="Купить">
+                    <input data-pid="<?php echo $product->id; ?>" class="btn btn-danger quickOrderCancel" type="button" value="Отмена">
+                    &nbsp;<img src="/img/ajax-loader.gif" style="display:none"/>
+                    <span class="successHandler">Спасибо за Ваш заказ!<br/><br/> Ближайшее время наш менеджер свяжется с Вами для уточнения деталей.</span>
+                    <span class="errorHandler">ошибка, попробуйте позже</span>
+                  </form>
+                </div>
+                <span class="loader"><img  src="/img/ajax-loader.gif" /></span> 
+                <span class="successAddOrder">товар успешно добавлен в корзину</span>
+                <span class="errorAddOrder">ошибка, попробуйте позже</span>
+              </p>
+            </div>
+          </div>
+          <br/>
+          <div class="row-fluid">
+            <div class="span12">
+              <div class="tabbable">
+                <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1" data-toggle="tab">Детали</a></li>
+                <li class=""><a href="#tab2" data-toggle="tab">Отзывы</a></li>
+                <?php if(count($product->related) > 0): ?>
+                <li class=""><a href="#tab3" data-toggle="tab">Похожие</a></li>
+                <?php endif; ?>
+                </ul>
+                <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                  <p><?php echo html_entity_decode($product->info); ?></p>
+                </div>
+                <div class="tab-pane" id="tab2">
+                  <?php if(!empty($comments)): ?>
+                    <ul class="comments">
+                      <?php foreach ($comments as $comment): ?>
+                        <li class="clearfix" itemprop="review" itemscope itemtype="http://schema.org/Review">
+                          <div class="post-comments">
+                            <p><?php echo $comment->body; ?>
+                            <p class="meta" ><span itemprop="author"><?php echo $comment->name; ?></span>, <?php echo date('d/m/Y', $comment->time); ?></p>
+                          </div>
+                          <div style="display:none" itemprop="reviewRating" itemscope itemtype="http://schema.org/Rating">
+                            <meta itemprop="worstRating" content = "1">
+                            <span itemprop="ratingValue">4.5</span>/
+                            <span itemprop="bestRating">5</span>stars
+                          </div>
+                        </li>
+                          
+                      <?php endforeach; ?>
+                    </ul>
+                  <?php endif; ?>
+                  <div class="row-fluid">
+                    <div class="span12 coment">
+                      <h3>Оставьте отзыв</h3>
+                      <form method="post" action="">
+                        <input type="text"  id="name" class="span6" placeholder="Имя">
+                        <input type="email" id="email" class="span6" placeholder="Email">
+                        <textarea class="span12 clearfix" rows="8" id="body" placeholder="Текст комментария"></textarea>
+                        <input data-pid="<?php echo $product->id; ?>" class="btn btn-warning addComment" type="button" value="Отправить">
+                        &nbsp;<img src="/img/ajax-loader.gif" style="display:none"/>
+                        <span class="successHandler">Ваш комментарий успешно отправлен на модерацию</span>
+                        <span class="errorHandler">Произошла ошибка. Попробуйте позже</span>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane" id="tab3">
+                  <div class="row-fluid">
+                    <ul class="thumbnails">
+                      <?php foreach($product->related as $relatedItem): ?>
+                        <li class="span4">
+                          <div class="thumbnail">
+                            <a href="/item/<?php echo $relatedItem->slug; ?>"><img src="/uploads/products/<?php echo $relatedItem->img['src']; ?>" alt="<?php echo $relatedItem->img['name']; ?>" /></a>
+                            <div class="caption-details">
+                            <h5><?php echo $relatedItem->name ?></h5>
+                            <span class="price">от <?php echo $relatedItem->minPrice; ?> грн.</span>
+                            </div>
+                          </div>
+                        </li>
+                      <?php endforeach; ?>
+                    </ul>
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!--break-->
+        
+        <div class="span3">
+          <div class="row-fluid sidebar">
+            <div class="span12">
+              <h3 style="color:#1e1e1e">Быстрая связь</h3>
+              <ul class="nav nav-tabs nav-stacked">
+                <!-- <li><a href="javascript:;">(050) 598 - 62 - 98</a></li> -->
+                <li><a href="javascript:;">(063) 726 - 12 - 17</a></li>
+                <li><a href="javascript:;">(096) 876 - 16 - 55</a></li>
+              </ul>
+
+              <h3 style="color:#1e1e1e">Популярные</h3>
+              <ul class="nav nav-tabs nav-stacked">
+                <?php foreach ($top8 as $topProduct): ?>
+                  <li <?php if($topProduct->id == $product->id): ?>class="active"<?php endif; ?>><a href="/item/<?php echo $topProduct->slug; ?>"><?php echo $topProduct->name; ?></a></li>
+                <?php endforeach; ?>
+              </ul>
+              
+              <h3 style="color:#1e1e1e">Инфомация</h3>
+              <ul class="nav nav-tabs nav-stacked">
+                <li><a href="/delivery">Оплата и доставка</a></li>
+                <li><a href="/rules">Правила сайта</a></li>
+                <li><a href="/about">О компании</a></li>
+                <li><a href="/contacts">Контакты</a></li>
+                <!-- <li><a href="/testimonials">Рекомендации</a></li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript">
+    $(function(){
+      $('#phoneQuick').mask('(000) 000 00 00');
+
+      $('input, textarea').on('focus', function(){
+        $(this).removeClass('error');
+      });
+      $('.addComment').on('click', function(){
+        var self          = this,
+            nameElm       = $('#name'),
+            emailElm      = $('#email'),
+            bodyElm       = $('#body'),
+            name          = $.trim(nameElm.val()),
+            email         = $.trim(emailElm.val()),
+            body          = $.trim(bodyElm.val()),
+            validateEmail = function(email){
+              var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+              return re.test(email);
+            };
+        
+        if(!name){
+          nameElm.addClass('error');
+          nameElm.focus();
+          return;
+        }
+
+        if(!email || !validateEmail(email)){
+          emailElm.addClass('error');
+          emailElm.focus();
+          return;
+        }
+
+        if(!body){
+          bodyElm.addClass('error');
+          bodyElm.focus();
+          return;
+        }
+
+        $(this).prop('disabled', true);
+        $(this).next().show();
+        
+        $.ajax({
+          url: '/item/comment',
+          type: 'post',
+          data: {
+            name: name,
+            email: email,
+            body: body,
+            pid: $(this).data('pid')
+          },
+          success: function(){
+            $('.successHandler').show();
+            $(self).next().hide();
+            nameElm.val('');
+            emailElm.val('');
+            bodyElm.val('');
+
+            _.delay(function(){ $('.successHandler').hide(); $(self).prop('disabled', false); }, 3000)
+          },
+          error: function(){
+            $('.errorHandler').show();
+            $(self).next().hide();
+            _.delay(function(){ $('.errorHandler').hide(); $(self).prop('disabled', false); }, 3000)
+          }
+        })
+      });
+
+      $('.quickOrder').on('click', function(){
+        $('.addOrder, .quickOrder').hide();
+        $('.quickOrderForm').delay(50).slideDown(500, function(){ $('#phoneQuick').focus(); });
+      });
+      $('.quickOrderCancel').on('click', function(){
+        $('.quickOrderForm').slideUp(500, function(){ $('.addOrder, .quickOrder').show();});
+      });
+
+      $('.quickOrderSend').on('click', function(){
+        var self          = this,
+            nameElm       = $('#nameQuick'),
+            phoneElm      = $('#phoneQuick'),
+            addressElm    = $('#addressQuick'),
+            notesElm      = $('#notesQuick'),
+            name          = $.trim(nameElm.val()),
+            phone         = $.trim(phoneElm.val()),
+            address       = $.trim(addressElm.val());
+            notes         = $.trim(notesElm.val());
+        
+        // if(!name){
+        //   nameElm.addClass('error');
+        //   nameElm.focus();
+        //   return;
+        // }
+
+        if(!phone || phone.length < 15){
+          phoneElm.addClass('error');
+          phoneElm.focus();
+          return;
+        }
+
+        // if(!address){
+        //   addressElm.addClass('error');
+        //   addressElm.focus();
+        //   return;
+        // }
+
+        $(this).prop('disabled', true);
+        $(this).next().prop('disabled', true);
+        $(this).next().next().show();
+        
+        $.ajax({
+          url: '/order/quick',
+          type: 'post',
+          data: {
+            // name: name,
+            phone: phone,
+            // address: address,
+            // notes: notes,
+            pid: $(this).data('pid'),
+            weight: $('.weight').data('id'),
+            price: $('.weight').data('price')
+          },
+          success: function(){
+            $('.quickOrderForm .successHandler').show();
+            $(self).next().next().hide();
+            nameElm.val('');
+            phoneElm.val('');
+            addressElm.val('');
+            notesElm.val('');
+
+            _.delay(function(){ 
+              $('.quickOrderForm .successHandler').hide(); 
+              $(self).prop('disabled', false); 
+              $(self).next().prop('disabled', false); 
+              $('.quickOrderForm').slideUp(500, function(){ $('.addOrder, .quickOrder').show();});
+            }, 3000)
+          },
+          error: function(){
+            $('.quickOrderForm .errorHandler').show();
+            $(self).next().next().hide();
+            _.delay(function(){ 
+              $('.quickOrderForm .errorHandler').hide(); 
+              $(self).prop('disabled', false); 
+              $(self).next().prop('disabled', false); 
+            }, 3000)
+          }
+        })
+      })
+    });
+  </script>
